@@ -17,10 +17,18 @@
         dist (read)]
     [dist enemy]))
 
+(defn nearest-enemy! [count]
+  "Return the scanned enemies."
+  (loop [i count min-dist 0 nearest-enemy nil]
+    (if (= 0 i)
+      nearest-enemy
+      (let [[dist enemy] (read-enemy!)]
+        (if (<= dist min-dist)
+          (recur (dec i) dist enemy)
+          (recur (dec i) min-dist nearest-enemy))))))
+
 (defn -main [& args]
   (while true
     ;; count: The number of current enemy ships within range
-    (let [nb-enemies (read)
-          map-enemies (doseq [_ (range nb-enemies)] (read-enemy!))]
-      (doseq [[dist enemy] (into (sorted-map) map-enemies)
-              (println enemy)))))
+    (let [nb-enemies (read)]
+      (println (nearest-enemy! nb-enemies)))))
