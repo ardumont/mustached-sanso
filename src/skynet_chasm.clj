@@ -1,21 +1,24 @@
 (ns Player
   (:gen-class))
 
-;; Auto-generated code below aims at helping you parse
-;; the standard input according to the problem statement.
+; Auto-generated code below aims at helping you parse
+; the standard input according to the problem statement.
 
 (defn -main [& args]
-  (let [R (read) G (read) L (read)]
-    ;; R: the length of the road before the gap.
-    ;; G: the length of the gap.
-    ;; L: the length of the landing platform.
+  (let [length-road-before-gap  (read)
+        length-gap              (read)
+        length-landing-platform (read)
+        min-speed-to-jump       (inc length-gap)
+        pos-to-jump             (dec length-road-before-gap)]
     (while true
-      (let [S (read) X (read)]
-        ;; S: the motorbike's speed.
-        ;; X: the position on the road of the motorbike.
-
-        ;; (binding [*out* *err*]
-        ;;   (println "Debug messages..."))
-
-        ;; A single line containing one of 4 keywords: SPEED, SLOW, JUMP, WAIT.
-        (println "SPEED")))))
+      (let [current-speed  (read)
+            current-pos    (read)
+            jump-size      current-speed
+            pos-next-turn  (+ current-pos current-speed)]
+        (let [action
+              (cond (and (< pos-next-turn pos-to-jump) (< jump-size min-speed-to-jump)) "SPEED"
+                    (and (< pos-next-turn pos-to-jump) (= jump-size min-speed-to-jump)) "WAIT"
+                    (= pos-next-turn pos-to-jump)                                       "WAIT"
+                    (= current-pos   pos-to-jump)                                       "JUMP"
+                    :else                                                               "SLOW")]
+                (println action))))))
