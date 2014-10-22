@@ -1,30 +1,20 @@
 (ns Player
   (:gen-class))
 
-(defn highest-mountain? [map-mountains]
-  "Compute the highest mountain indice."
-  (->> map-mountains
-       (reduce (fn [[i h] [j k]]
-                 (if (< h k)
-                   [j k]
-                   [i h]))
-               [-1 -1])
-       first))
-
-(defn scan-mountains! [nb-mountains]
+(defn scan-highest-mountain! [nb-mountains]
   "Scan the mountains' structure."
-  (loop [i 0 map-mountains {}]
+  (loop [i 0 highest-height -1 highest-indice 0]
     (if (= i nb-mountains)
-      map-mountains
-      (let [MH (read)]
-        (recur (inc i) (assoc map-mountains i MH))))))
+      highest-indice
+      (let [MH (read)
+            [max-height indice-moutain] (if (< highest-height MH) [MH i] [highest-height highest-indice])]
+        (recur (inc i) max-height indice-mountain)))))
 
 (defn -main [& args]
   (while true
     (let [SX (read)
           SY (read)]
-      (-> (scan-mountains! 8)
-           highest-mountain?
+      (-> (scan-highest-mountain! 8)
            (= SX)
            (if "FIRE" "HOLD")
            println))))
